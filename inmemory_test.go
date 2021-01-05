@@ -59,10 +59,10 @@ func TestAddCounter(t *testing.T) {
 }
 
 func TestAddCounterKey(t *testing.T) {
-	s.increment("counter")
-	if v, e := s.get("counter"); e == nil {
+	s.increment("randomcounter")
+	if v, e := s.get("randomcounter"); e == nil {
 		if v == "1" {
-			t.Logf("Value for counter is %s", v)
+			t.Logf("Value for randomcounter is %s", v)
 		} else {
 			t.Errorf("Value mismatch. Expected 1, Got %s", v)
 		}
