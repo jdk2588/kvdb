@@ -47,13 +47,24 @@ func TestDelete(t *testing.T) {
 
 func TestAddCounter(t *testing.T) {
 	s.add("counter", "0")
-	s.increment("counter", 11)
-	s.increment("counter", 12)
+	s.incrementBy("counter", 11)
+	s.incrementBy("counter", 12)
 	if v, e := s.get("counter"); e == nil {
 		if v == "23" {
 			t.Logf("Value for counter is %s", v)
 		} else {
 			t.Errorf("Value mismatch. Expected 23, Got %s", v)
+		}
+	}
+}
+
+func TestAddCounterKey(t *testing.T) {
+	s.increment("counter")
+	if v, e := s.get("counter"); e == nil {
+		if v == "1" {
+			t.Logf("Value for counter is %s", v)
+		} else {
+			t.Errorf("Value mismatch. Expected 1, Got %s", v)
 		}
 	}
 }

@@ -9,10 +9,11 @@ type Inmemory struct {
 	sets map[string]string
 }
 
-func (in Inmemory) increment(k string, add int) (bool, error) {
+func (in Inmemory) incrementBy(k string, add int) (bool, error) {
 	v, e := in.get(k)
 	if e != nil {
-		return false, e
+		in.add(k, "1")
+		return true, nil
 	}
 
 	if n, e := strconv.Atoi(v); e == nil {
@@ -23,6 +24,10 @@ func (in Inmemory) increment(k string, add int) (bool, error) {
 	}
 }
 
+func (in Inmemory) increment(k string) (bool, error){
+	return in.incrementBy(k, 1)
+}
+
 func (in Inmemory) add(k string, v string) bool {
 	in.sets[k] = v
 	return true
@@ -30,11 +35,9 @@ func (in Inmemory) add(k string, v string) bool {
 
 func (in Inmemory) get(k string) (string, error) {
 	val := in.sets[k]
-
 	if val == "" {
 		return val, fmt.Errorf("value not found for the key %s", k)
 	}
-
 	return val, nil
 }
 
