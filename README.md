@@ -41,4 +41,4 @@ arguments and may raise a panic.
 Use `exit` to terminate the program.
 
 TODO:
-- Make the program thread safe. 
+- Currently only one client can connect. It should move to a centralized server which needs to have thread safe write/update operations.
