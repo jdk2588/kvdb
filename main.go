@@ -8,19 +8,25 @@ import (
 	"strings"
 )
 
-func checkCommand(arr []string, s Inmemory) {
+func getKey(s Inmemory, key string) string {
+	val, e := s.get(key)
+	var output string
+	if e == nil {
+		output = val
+	} else {
+		output = e.Error()
+	}
+	return output
+}
+func checkCommand(arr []string, s Inmemory) string {
+	var output string
 	switch arr[0] {
 	case "SET":
 		s.add(arr[1], arr[2])
 	case "DEL":
 		s.delete(arr[1])
 	case "GET":
-		val, e := s.get(arr[1])
-		if e == nil {
-			fmt.Println(val)
-		} else {
-			fmt.Println(e.Error())
-		}
+			fmt.Println(getKey(s, arr[1]))
 	case "INCR":
 		if _, e := s.increment(arr[1]); e != nil {
 			fmt.Println(e.Error())
@@ -29,18 +35,17 @@ func checkCommand(arr []string, s Inmemory) {
 		v, err := strconv.Atoi(arr[2])
 		if err == nil {
 			if _, err := s.incrementBy(arr[1], v); err != nil {
-				fmt.Println(err.Error())
+				output = err.Error()
 			}
 		} else {
-			fmt.Printf("%s does not look like a counter!", arr[1])
+			output = fmt.Sprintf("%s does not look like a counter!", arr[1])
 		}
-	case "COMPACT":
-		for k, v := range s.sets {
-			fmt.Printf("SET %s %s\n", k, v)
-		}
+
 	default:
 		fmt.Println("Not a valid command!")
 	}
+
+	return output
 }
 
 func main() {
@@ -63,23 +68,25 @@ func main() {
 
 		arr := strings.Split(str, " ")
 
-		//if len(arr) < 2 {
-		//	fmt.Println("Minimum two arguments are required!")
-		//	break
-		//}
-
 		switch arr[0] {
 		case "MULTI":
 			multi = append(multi, arr)
 		case "DISCARD":
 			multi = [][]string{}
 		case "EXEC":
+			output := []string{}
 			for _, i := range multi {
 				if i[0] != "MULTI" {
 					checkCommand(i, s)
+					output = append(output, getKey(s, i[1]))
 				}
 			}
+			fmt.Println(output)
 			multi = [][]string{}
+		case "COMPACT":
+			for k, v := range s.sets {
+				fmt.Printf("SET %s %s\n", k, v)
+			}
 		default:
 			if len(multi) > 0 {
 				multi = append(multi, arr)
