@@ -9,6 +9,10 @@ type Inmemory struct {
 	sets map[string]string
 }
 
+func (in Inmemory) getAll() map[string]string {
+	return in.sets
+}
+
 func (in Inmemory) incrementBy(k string, add int) (bool, error) {
 	v, e := in.get(k)
 	if e != nil {

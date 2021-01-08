@@ -6,4 +6,5 @@ type Storer interface {
 	delete(string) (bool, error)
 	incrementBy(string, int) (bool, error)
 	increment(string) (bool, error)
+	getAll() map[string]string
 }
